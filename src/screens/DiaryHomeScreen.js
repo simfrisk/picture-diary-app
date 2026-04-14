@@ -58,7 +58,7 @@ export default function DiaryHomeScreen({ navigation, route }) {
       <View style={styles.cardText}>
         <Text style={styles.date}>{formatDate(item.created_at)}</Text>
         <Text style={styles.note} numberOfLines={2}>{item.note || 'No note'}</Text>
-        {item.latitude ? <Text style={styles.location}>📍 {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}</Text> : null}
+        {item.latitude ? <Text style={styles.location}>📍 {parseFloat(item.latitude).toFixed(4)}, {parseFloat(item.longitude).toFixed(4)}</Text> : null}
       </View>
     </TouchableOpacity>
   );
