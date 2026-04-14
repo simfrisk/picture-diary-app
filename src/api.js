@@ -1,33 +1,31 @@
 import * as SecureStore from 'expo-secure-store';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 const BASE_URL = 'https://7354c302e7.apps.osaas.io';
 
-async function getToken() {
-  return await SecureStore.getItemAsync('diary_token');
+async function getDeviceId() {
+  let id = await SecureStore.getItemAsync('device_id');
+  if (!id) {
+    id = uuidv4();
+    await SecureStore.setItemAsync('device_id', id);
+  }
+  return id;
 }
 
-export async function login(password) {
-  const res = await fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error);
-  await SecureStore.setItemAsync('diary_token', data.token);
-  return data.token;
+async function authHeaders() {
+  const deviceId = await getDeviceId();
+  return { 'X-Device-ID': deviceId };
 }
 
 export async function getEntries() {
-  const token = await getToken();
-  const res = await fetch(`${BASE_URL}/entries`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const headers = await authHeaders();
+  const res = await fetch(`${BASE_URL}/entries`, { headers });
   return res.json();
 }
 
 export async function createEntry({ imageUri, note, latitude, longitude }) {
-  const token = await getToken();
+  const headers = await authHeaders();
   const formData = new FormData();
   formData.append('photo', { uri: imageUri, type: 'image/jpeg', name: 'photo.jpg' });
   if (note) formData.append('note', note);
@@ -36,7 +34,7 @@ export async function createEntry({ imageUri, note, latitude, longitude }) {
 
   const res = await fetch(`${BASE_URL}/entries`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
+    headers,
     body: formData,
   });
   const data = await res.json();
@@ -45,9 +43,6 @@ export async function createEntry({ imageUri, note, latitude, longitude }) {
 }
 
 export async function deleteEntry(id) {
-  const token = await getToken();
-  await fetch(`${BASE_URL}/entries/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const headers = await authHeaders();
+  await fetch(`${BASE_URL}/entries/${id}`, { method: 'DELETE', headers });
 }

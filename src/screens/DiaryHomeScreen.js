@@ -1,33 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
   FlatList, Image, StyleSheet, Text, TouchableOpacity, View, RefreshControl, Alert,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
-import * as SecureStore from 'expo-secure-store';
 import { getEntries } from '../api';
 
-export default function DiaryHomeScreen({ navigation, route }) {
+export default function DiaryHomeScreen({ navigation }) {
   const [entries, setEntries] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const onLogout = route.params?.onLogout;
-
-  // Set up the logout button in the header
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
-  const handleLogout = async () => {
-    await SecureStore.deleteItemAsync('diary_token');
-    if (onLogout) {
-      onLogout();
-    }
-  };
 
   const load = useCallback(async () => {
     try {
@@ -106,6 +86,4 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   fabText: { fontSize: 28, color: '#fff', lineHeight: 32 },
-  logoutBtn: { marginRight: 4, paddingHorizontal: 8, paddingVertical: 4 },
-  logoutText: { fontSize: 15, color: '#007AFF' },
 });
