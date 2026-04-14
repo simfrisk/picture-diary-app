@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-const BASE_URL = 'https://picture-diary-api.apps.liivo.ai'; // update after Liivo deployment
+const BASE_URL = 'https://7354c302e7.apps.osaas.io';
 
 async function getToken() {
   return await SecureStore.getItemAsync('diary_token');
