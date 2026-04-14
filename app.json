@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Picture Diary",
+    "slug": "picture-diary",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.simfrisk.picturediary",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Picture Diary uses your camera to take photos for diary entries.",
+        "NSPhotoLibraryUsageDescription": "Picture Diary accesses your photo library to add photos to diary entries.",
+        "NSLocationWhenInUseUsageDescription": "Picture Diary tags your location when you create a diary entry."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
+  }
+}
